@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Matrix - For Marwah</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@100;200;300&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050203; /* Gelap romantis */
+            overflow: hidden;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Canvas Background */
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* Overlay Welcome Screen */
+        #welcome-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #050203;
+            transition: opacity 1s ease-out;
+        }
+
+        #welcome-btn {
+            padding: 1rem 3rem;
+            background: rgba(225, 29, 72, 0.05);
+            border: 1px solid rgba(225, 29, 72, 0.5);
+            color: #fbcfe8;
+            border-radius: 9999px;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 20px rgba(225, 29, 72, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        #welcome-btn:hover {
+            background: rgba(225, 29, 72, 0.2);
+            border-color: rgba(225, 29, 72, 0.8);
+            color: #ffffff;
+            box-shadow: 0 0 30px rgba(225, 29, 72, 0.6);
+            transform: scale(1.02);
+        }
+
+        /* Countdown Overlay */
+        #countdown-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #countdown-text {
+            font-size: 5rem;
+            color: #ffffff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.9);
+            animation: pulse 1s infinite;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            #countdown-text { font-size: 8rem; }
+        }
+
+        /* Final Heart Screen Content */
+        #heart-screen {
+            position: absolute;
+            inset: 0;
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 2.5s ease-in-out;
+        }
+
+        .glow-rose {
+            color: #ffffff;
+            text-shadow: 0 0 10px #ff0033, 0 0 20px #e11d48, 0 0 40px #be123c, 0 4px 8px rgba(0,0,0,0.9);
+        }
+
+        #sub-text {
+            opacity: 0; /* Awalnya hidden untuk animasi fadeInUp */
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.9); opacity: 0.7; }
+        }
+
+        /* Animasi muncul dari bawah */
+        .fade-in-up {
+            animation: fadeInUp 2s ease-out forwards;
+            animation-delay: 1.5s; /* Delay setelah siluet hati terbentuk */
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas Matrix Hujan Partikel -->
+    <canvas id="matrix"></canvas>
+
+    <!-- Matrix Gradient Overlay (Sleek Theme) -->
+    <div class="absolute inset-0 pointer-events-none" style="z-index: 2; background: radial-gradient(circle at center, transparent 0%, rgba(5,2,3,0.6) 60%, #050203 100%);"></div>
+
+    <!-- Overlay Sambutan Awal -->
+    <div id="welcome-screen" class="flex flex-col items-center justify-center space-y-6 md:space-y-8 z-50 p-4">
+        <p class="text-rose-200 text-lg md:text-2xl italic font-serif text-center tracking-wide font-light drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
+            " Buka amplop ini ya maraa ada sesuatu buat kamu "
+        </p>
+        <button id="welcome-btn" class="relative group outline-none border-none bg-transparent cursor-pointer p-4 hover:scale-110 transition-transform duration-500 flex items-center justify-center">
+            <!-- Closed Envelope SVG -->
+            <svg id="envelope-closed" class="w-24 h-24 md:w-32 md:h-32 text-rose-500 drop-shadow-[0_0_15px_rgba(225,29,72,0.6)] transition-opacity duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+            </svg>
+            <!-- Open Envelope SVG (Hidden initially, shown on click) -->
+            <svg id="envelope-open" class="w-24 h-24 md:w-32 md:h-32 text-rose-400 drop-shadow-[0_0_25px_rgba(251,113,133,0.8)] absolute opacity-0 transition-opacity duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844c0-1.165.734-2.15 1.791-2.527l9-3.23a2.25 2.25 0 0 1 1.418 0l9 3.23c1.057.377 1.791 1.362 1.791 2.527V18.31Z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Teks Countdown -->
+    <div id="countdown-screen">
+        <div id="countdown-text">3</div>
+    </div>
+
+    <!-- Teks Romantis Final -->
+    <div id="heart-screen" class="w-full h-full">
+        
+        <!-- Decorative Top Elements -->
+        <div class="absolute top-0 left-0 w-full p-8 flex justify-between items-start z-20 pointer-events-none hidden md:flex">
+            <div class="flex flex-col">
+                <div class="text-xs tracking-widest text-rose-400 opacity-60 uppercase font-sans">Encryption Mode</div>
+                <div class="text-xl font-light text-white italic">Rose Quartz Heart</div>
+            </div>
+            <div class="flex flex-col items-end">
+                <div class="text-xs tracking-widest text-rose-400 opacity-60 uppercase font-sans">Time Signal</div>
+                <div class="text-xl font-light text-white">∞ : ∞ : ∞</div>
+            </div>
+        </div>
+
+        <div class="relative flex items-center justify-center w-full h-full">
+            <!-- Dark void & glow behind text to make the heart center look 'empty' and boost contrast -->
+            <div class="absolute w-[280px] md:w-[450px] h-[280px] md:h-[450px] bg-[#050203]/90 blur-[40px] rounded-full -mt-8"></div>
+            <div class="absolute w-[260px] md:w-[420px] h-[260px] md:h-[420px] bg-rose-900/30 blur-[50px] rounded-full -mt-8"></div>
+            
+            <div class="absolute flex flex-col items-center text-center max-w-[90%] sm:max-w-[550px] px-4 -mt-16 z-10">
+                <h1 id="main-text" class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-widest glow-rose mb-3 sm:mb-4 leading-relaxed opacity-100">
+                    I miss you and<br />will always love you
+                </h1>
+                <div class="h-px w-24 sm:w-32 bg-gradient-to-r from-transparent via-rose-500 to-transparent my-4 sm:my-5 opacity-90"></div>
+                <p id="sub-text" class="text-rose-100/90 text-sm sm:text-base md:text-lg italic font-light leading-relaxed tracking-wider px-2" style="text-shadow: 0 2px 5px rgba(0,0,0,1);">
+                    "somehow, i always end up missing you,<br class="hidden sm:block"/> and you always be my favorite person"
+                </p>
+            </div>
+        </div>
+
+        <!-- Decorative Bottom Elements -->
+        <div class="absolute bottom-8 md:bottom-12 flex flex-col items-center opacity-40 w-full">
+            <div class="flex space-x-4 md:space-x-8 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-sans text-rose-300 mb-2">
+                <span>Neural Connectivity Active</span><span class="hidden md:inline">•</span><span class="hidden md:inline">Protocol: ROMANTIC_MATRIX_v2.0</span><span class="hidden md:inline">•</span><span>Core: ETERNAL_LOVE</span>
+            </div>
+            <div class="w-48 md:w-64 h-[1px] bg-rose-900/50"></div>
+        </div>
+        
+        <!-- Bottom gradient fade -->
+        <div class="absolute inset-0 bg-gradient-to-t from-[#050203] via-transparent to-transparent h-48 bottom-0 mt-auto pointer-events-none"></div>
+    </div>
+
+    <!-- Audio Autoplay Workaround (Gunakan placeholder musik romantis, bisa diganti local mp3) -->
+    <audio id="bgm" src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-and-strings-576.mp3" loop></audio>
+
+    <script>
+        // Inisialisasi Canvas
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        // Resize handler agar responsif
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initParticles(); // Re-init agar rata saat rotasi layar
+        });
+
+        // Konfigurasi Karakter dan Warna (Merah Estetik)
+        const CHARS = ['0', '1', '0', '1', '0', '1', '0', '1', '0', '1', '0', '1', 'L', 'O', 'V', 'E', 'M', 'I', 'S', 'S', 'LOVE', 'MISS'];
+        
+        // Warna Matrix Rain (Tetap Merah)
+        const RAIN_COLORS = [
+            '#ff0033', // Bright Red
+            '#e11d48', // Rose Red
+            '#be123c', // Darker Red
+            '#9f1239'  // Deep Red
+        ];
+
+        // Warna Siluet Hati (Beda, lebih kontras/terang)
+        const HEART_COLORS = [
+            '#fbcfe8', // Pink Pastel
+            '#ffffff', // Putih
+            '#f472b6', // Light pink
+            '#fda4af'  // Rose
+        ];
+        
+        let phase = 'idle'; // State: idle -> rain -> heart
+
+        // Class Partikel Matrix
+        class Particle {
+            constructor(col) {
+                this.reset(col);
+                // Memulai posisi y secara acak di seluruh layar (tersebar)
+                this.y = Math.random() * height * 2 - height; 
+            }
+
+            reset(col) {
+                this.col = col;
+                // Lebar kolom partikel ~25px
+                this.x = col * 25;
+                this.fontSize = Math.random() * 8 + 12;
+                this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                
+                this.role = Math.random() > 0.4 ? 'rain' : 'heart'; // 60% matrix rain, 40% form heart
+                
+                this.rainColor = RAIN_COLORS[Math.floor(Math.random() * RAIN_COLORS.length)];
+                this.heartColor = HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)];
+                
+                this.speed = Math.random() * 4 + 2;
+                
+                // Variabel khusus formasi siluet hati
+                this.angle = Math.random() * Math.PI * 2; // Sudut keliling hati
+                this.distFromCenter = Math.random() * 15; // Ketebalan outline hati
+            }
+
+            update(time, dtMultiplier) {
+                if (phase === 'rain' || phase === 'idle' || (phase === 'heart' && this.role === 'rain')) {
+                    // Logika Hujan Matrix (Turun ke bawah)
+                    this.y += this.speed * dtMultiplier;
+                    // Reset ke atas setelah melebihi layar
+                    if (this.y > height + 20) {
+                        this.y = -20;
+                        this.x = this.col * 25;
+                    }
+                    // Animasi pergantian karakter secara random
+                    if (Math.random() < 0.03) {
+                        this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                    }
+                } else if (phase === 'heart' && this.role === 'heart') {
+                    // Logika Transisi Formasi Hati (Berdengung & Berputar)
+                    this.angle += this.speed * 0.003 * dtMultiplier;
+                    if (this.angle > Math.PI * 2) this.angle -= Math.PI * 2;
+
+                    const t = this.angle;
+                    
+                    // Efek berdenyut dinamis (Heartbeat) mengikuti waktu
+                    const beat = 1 + Math.sin(time * 0.004) * 0.06;
+                    
+                    // Skala hati adaptif sesuai ukuran layar (diperbesar agar teks muat di tengah)
+                    const scale = Math.min(width, height) * 0.035 * beat;
+
+                    // Persamaan parametrik bentuk hati
+                    const hX = 16 * Math.pow(Math.sin(t), 3);
+                    const hY = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+
+                    // Offset pusat layar (sedikit naik)
+                    const centerX = width / 2;
+                    const centerY = height / 2 - 30;
+
+                    // Tambahkan noise agar hati terlihat bervolume/tebal (bukan garis tipis)
+                    const noiseX = Math.cos(this.angle * 10) * this.distFromCenter;
+                    const noiseY = Math.sin(this.angle * 10) * this.distFromCenter;
+
+                    const targetX = centerX + (hX * scale) + noiseX;
+                    const targetY = centerY + (hY * scale) + noiseY;
+
+                    // Interpolasi posisi partikel perlahan menuju bentuk hati (Efek terbang mulus dengan framerate independent lerp)
+                    const smoothFactor = 1 - Math.pow(1 - 0.15, dtMultiplier);
+                    this.x += (targetX - this.x) * smoothFactor;
+                    this.y += (targetY - this.y) * smoothFactor;
+
+                    // Tetap ganti karakter secara sporadis
+                    if (Math.random() < 0.02) {
+                        this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                    }
+                }
+            }
+
+            draw(ctx) {
+                let currentColor = (phase === 'heart' && this.role === 'heart') ? this.heartColor : this.rainColor;
+
+                // Kata LOVE dan MISS miring & lebih estetik, dan selalu dipaksa warna merah
+                if (this.char === 'LOVE' || this.char === 'MISS') {
+                    ctx.font = `italic 600 ${this.fontSize + 4}px 'Cormorant Garamond', serif`;
+                    ctx.fillStyle = '#ff0033'; // Tetap merah estetik
+                    ctx.shadowColor = '#ff0033';
+                } else {
+                    ctx.font = `300 ${this.fontSize}px 'JetBrains Mono', monospace`;
+                    ctx.fillStyle = currentColor;
+                    ctx.shadowColor = currentColor;
+                }
+                
+                // Efek Pendaran/Glow Light Romantis
+                ctx.shadowBlur = phase === 'heart' ? 15 : 5;
+                ctx.fillText(this.char, this.x, this.y);
+                ctx.shadowBlur = 0; // Reset shadow untuk partikel lain
+            }
+        }
+
+        // Generate Partikel (Kerapatan Tinggi)
+        let particles = [];
+        function initParticles() {
+            particles = [];
+            const cols = Math.floor(width / 25);
+            for (let i = 0; i < cols; i++) {
+                // Density: 28 partikel per kolom (ditingkatkan agar rain & heart padat)
+                for(let j = 0; j < 28; j++) {
+                    particles.push(new Particle(i));
+                }
+            }
+        }
+        initParticles();
+
+        // Game Loop / Animasi Utama
+        let lastTime = performance.now();
+        function render(time) {
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            
+            // Batasi dt untuk menghindari lompatan animasi saat tab tidak aktif (dt multiplier berdasar 60fps)
+            const dtMultiplier = Math.min(deltaTime / 16.66, 3);
+
+            // Fill warna transparan menciptakan efek jejak memudar (trails)
+            ctx.fillStyle = 'rgba(5, 2, 3, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Selalu jalankan animasi (baik 'idle', 'rain', atau 'heart')
+            particles.forEach(p => {
+                p.update(time, dtMultiplier);
+                p.draw(ctx);
+            });
+
+            requestAnimationFrame(render);
+        }
+        requestAnimationFrame(time => {
+            lastTime = time;
+            render(time);
+        });
+
+        // --- Logika Interaksi UI ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const welcomeBtn = document.getElementById('welcome-btn');
+        const envelopeClosed = document.getElementById('envelope-closed');
+        const envelopeOpen = document.getElementById('envelope-open');
+        const countdownScreen = document.getElementById('countdown-screen');
+        const countdownText = document.getElementById('countdown-text');
+        const heartScreen = document.getElementById('heart-screen');
+        const subText = document.getElementById('sub-text');
+        const bgm = document.getElementById('bgm');
+
+        welcomeBtn.addEventListener('click', () => {
+            // Ubah gambar amplop menjadi terbuka
+            envelopeClosed.style.opacity = '0';
+            envelopeOpen.style.opacity = '1';
+            
+            // Tambahkan efek membesar
+            welcomeBtn.classList.add('scale-125');
+
+            // "Warm-up" audio untuk bypass strict autoplay restriction dari browser
+            // Kita play lalu segera pause agar statusnya sudah diizinkan oleh user gesture
+            bgm.volume = 0;
+            bgm.play().then(() => {
+                bgm.pause();
+                bgm.currentTime = 0;
+            }).catch(err => console.log('Autoplay ditolak:', err));
+
+            // Tunggu sebentar (1 detik) untuk menunjukkan amplop terbuka, lalu fade out
+            setTimeout(() => {
+                welcomeScreen.style.opacity = '0';
+                setTimeout(() => {
+                    welcomeScreen.style.display = 'none';
+                    startSequence();
+                }, 1000); // Sinkron dgn durasi transisi CSS
+            }, 1000);
+        });
+
+        function startSequence() {
+            // Fase 1: Hujan Matrix turun dengan padat
+            phase = 'rain';
+            
+            // Fase 2: Munculkan Countdown dan Kata-kata
+            countdownScreen.style.opacity = '1';
+            
+            const sequence = ['3', '2', '1', 'You', 'Are', 'My', 'Love'];
+            let index = 0;
+            countdownText.innerText = sequence[index];
+
+            const countInterval = setInterval(() => {
+                index++;
+                if (index < sequence.length) {
+                    // Putar lagu tepat saat teks "You" muncul
+                    if (sequence[index] === 'You') {
+                        bgm.volume = 0.6;
+                        bgm.play().catch(err => console.log('Autoplay ditolak:', err));
+                    }
+
+                    // Update kata/angka
+                    countdownText.style.animation = 'none'; // reset animasi pulse
+                    countdownText.offsetHeight; /* trigger reflow */
+                    countdownText.style.animation = 'pulse 1s infinite';
+                    countdownText.innerText = sequence[index];
+                } else {
+                    // Selesai sequence
+                    clearInterval(countInterval);
+                    countdownScreen.style.opacity = '0';
+                    
+                    // Fase 3: Transisi Hati dan Teks Romantis (Langsung tanpa delay)
+                    phase = 'heart'; // mengubah target partikel segera menyatu
+                    heartScreen.style.opacity = '1';
+                    // Trigger animasi teks bawah
+                    subText.classList.add('fade-in-up');
+                }
+            }, 1000); // 1 kata per detik
+        }
+    </script>
+</body>
+</html>

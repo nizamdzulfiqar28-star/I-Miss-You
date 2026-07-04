@@ -1,0 +1,6 @@
+{
+  "name": "Romantic Matrix",
+  "description": "A single-page romantic matrix animation website.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
