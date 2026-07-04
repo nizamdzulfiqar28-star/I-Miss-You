@@ -104,7 +104,7 @@
 
         .glow-rose {
             color: #ffffff;
-            text-shadow: 0 0 10px #ff0033, 0 0 20px #e11d48, 0 0 40px #be123c, 0 4px 8px rgba(0,0,0,0.9);
+            text-shadow: 0 0 10px rgba(255, 200, 215, 0.6), 0 0 25px rgba(244, 114, 182, 0.5), 0 0 45px rgba(225, 29, 72, 0.3), 0 4px 15px rgba(0, 0, 0, 0.85);
         }
 
         #sub-text {
@@ -132,6 +132,20 @@
                 transform: translateY(0);
             }
         }
+        
+        @keyframes pageEntry {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .page-entry-anim {
+            animation: pageEntry 1.5s ease-out forwards;
+        }
     </style>
 </head>
 <body>
@@ -142,20 +156,11 @@
     <div class="absolute inset-0 pointer-events-none" style="z-index: 2; background: radial-gradient(circle at center, transparent 0%, rgba(5,2,3,0.6) 60%, #050203 100%);"></div>
 
     <!-- Overlay Sambutan Awal -->
-    <div id="welcome-screen" class="flex flex-col items-center justify-center space-y-6 md:space-y-8 z-50 p-4">
+    <div id="welcome-screen" class="page-entry-anim flex flex-col items-center justify-center space-y-6 md:space-y-8 z-50 p-4">
         <p class="text-rose-200 text-lg md:text-2xl italic font-serif text-center tracking-wide font-light drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">
             " Buka amplop ini ya maraa ada sesuatu buat kamu "
         </p>
-        <button id="welcome-btn" class="relative group outline-none border-none bg-transparent cursor-pointer p-4 hover:scale-110 transition-transform duration-500 flex items-center justify-center">
-            <!-- Closed Envelope SVG -->
-            <svg id="envelope-closed" class="w-24 h-24 md:w-32 md:h-32 text-rose-500 drop-shadow-[0_0_15px_rgba(225,29,72,0.6)] transition-opacity duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-            </svg>
-            <!-- Open Envelope SVG (Hidden initially, shown on click) -->
-            <svg id="envelope-open" class="w-24 h-24 md:w-32 md:h-32 text-rose-400 drop-shadow-[0_0_25px_rgba(251,113,133,0.8)] absolute opacity-0 transition-opacity duration-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844c0-1.165.734-2.15 1.791-2.527l9-3.23a2.25 2.25 0 0 1 1.418 0l9 3.23c1.057.377 1.791 1.362 1.791 2.527V18.31Z" />
-            </svg>
-        </button>
+        <button id="welcome-btn">Tekan ini yaa</button>
     </div>
 
     <!-- Teks Countdown -->
@@ -185,7 +190,7 @@
             
             <div class="absolute flex flex-col items-center text-center max-w-[90%] sm:max-w-[550px] px-4 -mt-16 z-10">
                 <h1 id="main-text" class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-widest glow-rose mb-3 sm:mb-4 leading-relaxed opacity-100">
-                    I miss you and<br />will always love you
+                    I miss you and<br />will always love you 🤍
                 </h1>
                 <div class="h-px w-24 sm:w-32 bg-gradient-to-r from-transparent via-rose-500 to-transparent my-4 sm:my-5 opacity-90"></div>
                 <p id="sub-text" class="text-rose-100/90 text-sm sm:text-base md:text-lg italic font-light leading-relaxed tracking-wider px-2" style="text-shadow: 0 2px 5px rgba(0,0,0,1);">
@@ -195,10 +200,8 @@
         </div>
 
         <!-- Decorative Bottom Elements -->
-        <div class="absolute bottom-8 md:bottom-12 flex flex-col items-center opacity-40 w-full">
-            <div class="flex space-x-4 md:space-x-8 text-[8px] md:text-[10px] uppercase tracking-[0.3em] font-sans text-rose-300 mb-2">
-                <span>Neural Connectivity Active</span><span class="hidden md:inline">•</span><span class="hidden md:inline">Protocol: ROMANTIC_MATRIX_v2.0</span><span class="hidden md:inline">•</span><span>Core: ETERNAL_LOVE</span>
-            </div>
+        <div class="page-entry-anim absolute bottom-4 md:bottom-8 flex flex-col items-center w-full z-20" style="animation-delay: 0.5s; opacity: 0;">
+            <div id="typing-text" class="text-[8px] md:text-[9px] text-center uppercase tracking-[0.2em] font-sans text-rose-300 mb-3 opacity-80 leading-[1.6] whitespace-pre-wrap min-h-[90px] w-[90%] max-w-[400px]"></div>
             <div class="w-48 md:w-64 h-[1px] bg-rose-900/50"></div>
         </div>
         
@@ -207,7 +210,7 @@
     </div>
 
     <!-- Audio Autoplay Workaround (Gunakan placeholder musik romantis, bisa diganti local mp3) -->
-    <audio id="bgm" src="https://assets.mixkit.co/music/preview/mixkit-romantic-piano-and-strings-576.mp3" loop></audio>
+    <audio id="bgm" src="https://mp3tourl.com/audio/1783169784234-2bdc627e-4833-48b9-a250-37b7ed9a37a0.mp3" loop></audio>
 
     <script>
         // Inisialisasi Canvas
@@ -223,8 +226,9 @@
             initParticles(); // Re-init agar rata saat rotasi layar
         });
 
-        // Konfigurasi Karakter dan Warna (Merah Estetik)
-        const CHARS = ['0', '1', '0', '1', '0', '1', '0', '1', '0', '1', '0', '1', 'L', 'O', 'V', 'E', 'M', 'I', 'S', 'S', 'LOVE', 'MISS'];
+        // Konfigurasi Karakter
+        const RAIN_CHARS = ['0', '1', '0', '1', '0', '1', '0', '1', 'L', 'O', 'V', 'E', 'M', 'I', 'S', 'S', 'LOVE', 'MISS'];
+        const HEART_CHARS = ['M', 'A', 'R', 'W', 'A', 'H', '🤍', '0', '1', '0', '1'];
         
         // Warna Matrix Rain (Tetap Merah)
         const RAIN_COLORS = [
@@ -246,29 +250,32 @@
 
         // Class Partikel Matrix
         class Particle {
-            constructor(col) {
-                this.reset(col);
-                // Memulai posisi y secara acak di seluruh layar (tersebar)
-                this.y = Math.random() * height * 2 - height; 
-            }
-
-            reset(col) {
+            constructor(col, isHeart = false, heartIndex = 0, totalHearts = 1) {
                 this.col = col;
-                // Lebar kolom partikel ~25px
                 this.x = col * 25;
-                this.fontSize = Math.random() * 8 + 12;
-                this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                this.y = Math.random() * height * 2 - height;
+                this.role = isHeart ? 'heart' : 'rain';
                 
-                this.role = Math.random() > 0.4 ? 'rain' : 'heart'; // 60% matrix rain, 40% form heart
+                if (this.role === 'heart') {
+                    this.char = HEART_CHARS[heartIndex % HEART_CHARS.length];
+                    this.hideInHeart = false;
+                    // Font diseragamkan dan diperbesar agar rapi membentuk outline
+                    this.fontSize = 24; 
+                    // Sudut didistribusikan merata agar partikel berurutan dan tidak bertubrukan
+                    this.angle = (heartIndex / totalHearts) * Math.PI * 2;
+                    this.rotationSpeed = 0.003; 
+                } else {
+                    this.char = RAIN_CHARS[Math.floor(Math.random() * RAIN_CHARS.length)];
+                    this.hideInHeart = Math.random() > 0.15; 
+                    this.fontSize = Math.random() * 8 + 12;
+                    this.angle = 0;
+                    this.rotationSpeed = 0;
+                }
                 
                 this.rainColor = RAIN_COLORS[Math.floor(Math.random() * RAIN_COLORS.length)];
                 this.heartColor = HEART_COLORS[Math.floor(Math.random() * HEART_COLORS.length)];
                 
                 this.speed = Math.random() * 4 + 2;
-                
-                // Variabel khusus formasi siluet hati
-                this.angle = Math.random() * Math.PI * 2; // Sudut keliling hati
-                this.distFromCenter = Math.random() * 15; // Ketebalan outline hati
             }
 
             update(time, dtMultiplier) {
@@ -280,19 +287,19 @@
                         this.y = -20;
                         this.x = this.col * 25;
                     }
-                    // Animasi pergantian karakter secara random
-                    if (Math.random() < 0.03) {
-                        this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+                    // Animasi pergantian karakter secara random (hanya untuk partikel hujan)
+                    if (Math.random() < 0.03 && this.role === 'rain') {
+                        this.char = RAIN_CHARS[Math.floor(Math.random() * RAIN_CHARS.length)];
                     }
                 } else if (phase === 'heart' && this.role === 'heart') {
-                    // Logika Transisi Formasi Hati (Berdengung & Berputar)
-                    this.angle += this.speed * 0.003 * dtMultiplier;
+                    // Kecepatan putar seragam agar posisi relatif tidak berubah (tidak saling bertubrukan)
+                    this.angle += this.rotationSpeed * dtMultiplier;
                     if (this.angle > Math.PI * 2) this.angle -= Math.PI * 2;
 
                     const t = this.angle;
                     
-                    // Efek berdenyut dinamis (Heartbeat) mengikuti waktu
-                    const beat = 1 + Math.sin(time * 0.004) * 0.06;
+                    // Efek berdenyut dinamis (Heartbeat) mengikuti waktu, diperlambat agar lebih stabil
+                    const beat = 1 + Math.sin(time * 0.002) * 0.04;
                     
                     // Skala hati adaptif sesuai ukuran layar (diperbesar agar teks muat di tengah)
                     const scale = Math.min(width, height) * 0.035 * beat;
@@ -305,41 +312,32 @@
                     const centerX = width / 2;
                     const centerY = height / 2 - 30;
 
-                    // Tambahkan noise agar hati terlihat bervolume/tebal (bukan garis tipis)
-                    const noiseX = Math.cos(this.angle * 10) * this.distFromCenter;
-                    const noiseY = Math.sin(this.angle * 10) * this.distFromCenter;
-
-                    const targetX = centerX + (hX * scale) + noiseX;
-                    const targetY = centerY + (hY * scale) + noiseY;
+                    // Hilangkan noise acak agar partikel berurutan tepat di garis outline (tidak tebal/berantakan)
+                    const targetX = centerX + (hX * scale);
+                    const targetY = centerY + (hY * scale);
 
                     // Interpolasi posisi partikel perlahan menuju bentuk hati (Efek terbang mulus dengan framerate independent lerp)
                     const smoothFactor = 1 - Math.pow(1 - 0.15, dtMultiplier);
                     this.x += (targetX - this.x) * smoothFactor;
                     this.y += (targetY - this.y) * smoothFactor;
-
-                    // Tetap ganti karakter secara sporadis
-                    if (Math.random() < 0.02) {
-                        this.char = CHARS[Math.floor(Math.random() * CHARS.length)];
-                    }
+                    
+                    // Tidak mengganti karakter secara sporadis agar tetap ejaan MARWAH🤍 berurutan
                 }
             }
 
             draw(ctx) {
+                // Sembunyikan sebagian besar partikel hujan saat fase heart agar tidak ramai
+                if (phase === 'heart' && this.role === 'rain' && this.hideInHeart) return;
+
                 let currentColor = (phase === 'heart' && this.role === 'heart') ? this.heartColor : this.rainColor;
 
-                // Kata LOVE dan MISS miring & lebih estetik, dan selalu dipaksa warna merah
-                if (this.char === 'LOVE' || this.char === 'MISS') {
-                    ctx.font = `italic 600 ${this.fontSize + 4}px 'Cormorant Garamond', serif`;
-                    ctx.fillStyle = '#ff0033'; // Tetap merah estetik
-                    ctx.shadowColor = '#ff0033';
-                } else {
-                    ctx.font = `300 ${this.fontSize}px 'JetBrains Mono', monospace`;
-                    ctx.fillStyle = currentColor;
-                    ctx.shadowColor = currentColor;
-                }
+                let fontWeight = (phase === 'heart' && this.role === 'heart') ? 600 : 300;
+                ctx.font = `${fontWeight} ${this.fontSize}px 'JetBrains Mono', monospace`;
+                ctx.fillStyle = currentColor;
+                ctx.shadowColor = currentColor;
                 
                 // Efek Pendaran/Glow Light Romantis
-                ctx.shadowBlur = phase === 'heart' ? 15 : 5;
+                ctx.shadowBlur = phase === 'heart' ? 20 : 5;
                 ctx.fillText(this.char, this.x, this.y);
                 ctx.shadowBlur = 0; // Reset shadow untuk partikel lain
             }
@@ -350,10 +348,26 @@
         function initParticles() {
             particles = [];
             const cols = Math.floor(width / 25);
+            const totalParticles = cols * 28;
+            
+            // 11 Karakter (M,A,R,W,A,H,🤍,0,1,0,1) dikali 5 putaran = 55 partikel heart
+            const TOTAL_HEARTS = 55; 
+            let heartCount = 0;
+            
             for (let i = 0; i < cols; i++) {
-                // Density: 28 partikel per kolom (ditingkatkan agar rain & heart padat)
+                // Density: 28 partikel per kolom
                 for(let j = 0; j < 28; j++) {
-                    particles.push(new Particle(i));
+                    let isHeart = false;
+                    const remainingParticles = totalParticles - particles.length;
+                    const remainingHearts = TOTAL_HEARTS - heartCount;
+                    
+                    if (remainingHearts > 0 && Math.random() < (remainingHearts / remainingParticles)) {
+                        isHeart = true;
+                        particles.push(new Particle(i, isHeart, heartCount, TOTAL_HEARTS));
+                        heartCount++;
+                    } else {
+                        particles.push(new Particle(i, false, 0, 1));
+                    }
                 }
             }
         }
@@ -388,8 +402,6 @@
         // --- Logika Interaksi UI ---
         const welcomeScreen = document.getElementById('welcome-screen');
         const welcomeBtn = document.getElementById('welcome-btn');
-        const envelopeClosed = document.getElementById('envelope-closed');
-        const envelopeOpen = document.getElementById('envelope-open');
         const countdownScreen = document.getElementById('countdown-screen');
         const countdownText = document.getElementById('countdown-text');
         const heartScreen = document.getElementById('heart-screen');
@@ -397,13 +409,6 @@
         const bgm = document.getElementById('bgm');
 
         welcomeBtn.addEventListener('click', () => {
-            // Ubah gambar amplop menjadi terbuka
-            envelopeClosed.style.opacity = '0';
-            envelopeOpen.style.opacity = '1';
-            
-            // Tambahkan efek membesar
-            welcomeBtn.classList.add('scale-125');
-
             // "Warm-up" audio untuk bypass strict autoplay restriction dari browser
             // Kita play lalu segera pause agar statusnya sudah diizinkan oleh user gesture
             bgm.volume = 0;
@@ -412,15 +417,17 @@
                 bgm.currentTime = 0;
             }).catch(err => console.log('Autoplay ditolak:', err));
 
-            // Tunggu sebentar (1 detik) untuk menunjukkan amplop terbuka, lalu fade out
+            // Disable button to prevent multiple clicks
+            welcomeBtn.disabled = true;
+            welcomeBtn.style.pointerEvents = 'none';
+
+            // Fade out overlay sambutan
+            welcomeScreen.style.opacity = '0';
             setTimeout(() => {
-                welcomeScreen.style.opacity = '0';
-                setTimeout(() => {
-                    welcomeScreen.style.display = 'none';
-                    startSequence();
-                }, 1000); // Sinkron dgn durasi transisi CSS
-            }, 1000);
-        });
+                welcomeScreen.style.display = 'none';
+                startSequence();
+            }, 1000); // Sinkron dgn durasi transisi CSS
+        }, { once: true });
 
         function startSequence() {
             // Fase 1: Hujan Matrix turun dengan padat
@@ -436,8 +443,8 @@
             const countInterval = setInterval(() => {
                 index++;
                 if (index < sequence.length) {
-                    // Putar lagu tepat saat teks "You" muncul
-                    if (sequence[index] === 'You') {
+                    // Putar lagu tepat saat teks "My" muncul
+                    if (sequence[index] === 'My') {
                         bgm.volume = 0.6;
                         bgm.play().catch(err => console.log('Autoplay ditolak:', err));
                     }
@@ -457,8 +464,28 @@
                     heartScreen.style.opacity = '1';
                     // Trigger animasi teks bawah
                     subText.classList.add('fade-in-up');
+                    startTypingAnimation();
                 }
             }, 1000); // 1 kata per detik
+        }
+        
+        // Typing Animation untuk teks bawah
+        function startTypingAnimation() {
+            const typingTextElement = document.getElementById('typing-text');
+            typingTextElement.textContent = ''; // Kosongkan sebelum mulai ngetik
+            const textToType = "Think I'll miss you forever\nlike the stars miss the sun\nin the morning sky\n\nLater's better than never\neven if you're gone";
+            let typingIndex = 0;
+            
+            function typeText() {
+                if (typingIndex < textToType.length) {
+                    typingTextElement.textContent += textToType.charAt(typingIndex);
+                    typingIndex++;
+                    // Variasikan kecepatan ngetik sedikit agar lebih natural
+                    const delay = Math.random() * 30 + 50; 
+                    setTimeout(typeText, delay);
+                }
+            }
+            typeText();
         }
     </script>
 </body>
